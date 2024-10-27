@@ -1,0 +1,13 @@
+<h2>Welcome to the Task Management App</h2>
+
+{% if user.is_authenticated %}
+<p>Hello, {{ user.username }}!</p>
+<!-- builtin logout doesnt support get requests -->
+<form action="{% url 'logout' %}" method="post">
+  {% csrf_token %}
+  <button type="submit">Logout</button>
+</form>
+{% else %}
+<a href="{% url 'login' %}">Login</a> or
+<a href="{% url 'register' %}">Register</a>
+{% endif %}
