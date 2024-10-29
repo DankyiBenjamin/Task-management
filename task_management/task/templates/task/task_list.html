@@ -1,0 +1,28 @@
+<h2>Welcome to the Task Management App</h2>
+
+{% if user.is_authenticated %}
+<p>Hello, {{ user.username }}!</p>
+<!-- builtin logout doesnt support get requests -->
+<form action="{% url 'logout' %}" method="post">
+  {% csrf_token %}
+  <button type="submit">Logout</button>
+</form>
+<h2>Task List</h2>
+<a href="{% url 'task_create' %}">Create New Task</a>
+<ul>
+  {% for task in tasks %}
+  <li>
+    <strong>{{ task.title }}</strong> - {{ task.get_status_display }} -
+    {{task.due_date }}
+    <a href="{% url 'task_update' task.pk %}">Edit</a>
+    <a href="{% url 'task_delete' task.pk %}">Delete</a>
+  </li>
+  {% empty %}
+  <p>No tasks available.</p>
+  {% endfor %}
+</ul>
+
+{% else %}
+<a href="{% url 'login' %}">Login</a> or
+<a href="{% url 'register' %}">Register</a>
+{% endif %}

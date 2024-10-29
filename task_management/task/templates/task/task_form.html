@@ -1,0 +1,6 @@
+<h2>{% if form.instance.pk %}Edit Task{% else %}Create Task{% endif %}</h2>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Save</button>
+  <a href="{% url 'task_list' %}">Cancel</a>
+</form>
