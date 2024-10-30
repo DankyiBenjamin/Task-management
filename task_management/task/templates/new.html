@@ -7,6 +7,7 @@
   {% csrf_token %}
   <button type="submit">Logout</button>
 </form>
+<!-- task/templates/task/task_list.html -->
 <h2>Task List</h2>
 
 <!-- Link to create a new task -->
@@ -28,22 +29,14 @@
 
 <!-- Task list display -->
 <ul>
-  {% for task in tasks %}
-  <li>
-    <strong>{{ task.title }}</strong> - {{ task.get_status_display }} -
-    {{task.due_date }}
-    <a href="{% url 'task_update' task.pk %}">Edit</a>
-    <a href="{% url 'task_delete' task.pk %}">Delete</a>
-  </li>
-  {% empty %}
-  <p>No tasks available.</p>
-  {% endfor %}
+    {% for task in tasks %}
+        <li>{{ task.title }} - {{ task.get_status_display }}</li>
+    {% empty %}
+        <p>No tasks available.</p>
+    {% endfor %}
 </ul>
 
 {% else %}
 <a href="{% url 'login' %}">Login</a> or
 <a href="{% url 'register' %}">Register</a>
 {% endif %}
-
-<!-- check on this to make changes -->
-
