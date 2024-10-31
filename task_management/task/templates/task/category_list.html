@@ -1,3 +1,6 @@
+{%extends 'task/base.html'%} {% block title%} Category List {% endblock %}
+<!-- block content -->
+{% block content %}
 <h2>Categories</h2>
 <a href="{% url 'category_create' %}">Create New Category</a>
 <a href="{% url 'task_list' %}">Task List</a>
@@ -11,3 +14,4 @@
   <p>No categories available.</p>
   {% endfor %}
 </ul>
+{% endblock %}

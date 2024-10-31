@@ -1,12 +1,10 @@
+{%extends 'task/base.html'%}
 <h2>Welcome to the Task Management App</h2>
 
-{% if user.is_authenticated %}
-<p>Hello, {{ user.username }}!</p>
-<!-- builtin logout doesnt support get requests -->
-<form action="{% url 'logout' %}" method="post">
-  {% csrf_token %}
-  <button type="submit">Logout</button>
-</form>
+<!-- using the extended html -->
+ {% block title%} Task List {% endblock %}
+
+ {% block content %}
 <h2>Task List</h2>
 
 <!-- Link to create a new task -->
@@ -14,16 +12,43 @@
 <a href="{% url 'category_list' %}">Manage Categories</a>
 
 <!-- Category filter form -->
-<form method="get">
-  <label for="category">Filter by Category:</label>
-  <select name="category" id="category" onchange="this.form.submit()">
-      <option value="" {% if not request.GET.category %}selected{% endif %}>All</option>
-      {% for category in categories %}
-          <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
-              {{ category.name }}
-          </option>
-      {% endfor %}
+ <!-- Search and filter form -->
+<form method="get" class="search-filter-form d-flex mb-3">
+  <!-- Search bar -->
+  <label for="search">Search:</label>
+  <input type="text" name="search" id="search" placeholder="Search tasks" class="form-control me-2" value="">
+  
+  <!-- Category filter -->
+  <label for="category">Category:</label>
+  <select name="category" id="category" class="form-select me-2" onchange="this.form.submit()">
+    <option value="" {% if not request.GET.category %}selected{% endif %}>All</option>
+    {% for category in categories %}
+        <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+            {{ category.name }}
+        </option>
+    {% endfor %}
+</select>
+
+  <!-- Status filter -->
+  <label for="status">Status:</label>
+  <select name="status" id="status" class="form-select me-2" onchange="this.form.submit()">
+      <option value="" {% if not request.GET.status %}selected{% endif %}>All</option>
+      <option value="todo" {% if status_filter == 'todo' %}selected{% endif %}>To Do</option>
+      <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
+      <option value="done" {% if status_filter == 'done' %}selected{% endif %}>Done</option>
   </select>
+
+  <!-- Priority filter -->
+  <label for="priority">Priority:</label>
+  <select name="priority" id="priority" class="form-select me-2" onchange="this.form.submit()">
+      <option value="" {% if not request.GET.priority %}selected{% endif %}>All</option>
+      <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>Low</option>
+      <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>Medium</option>
+      <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>High</option>
+  </select>
+
+  <!-- Submit button for search bar -->
+  <button type="submit" class="btn btn-primary">Filter</button>
 </form>
 
 <!-- Task list display -->
@@ -40,10 +65,6 @@
   {% endfor %}
 </ul>
 
-{% else %}
-<a href="{% url 'login' %}">Login</a> or
-<a href="{% url 'register' %}">Register</a>
-{% endif %}
-
+{% endblock %}
 <!-- check on this to make changes -->
 

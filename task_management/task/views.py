@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.db.models import Q
 
 from .models import Task, Category
 from .forms import TaskForm, CategoryForm
@@ -36,12 +37,40 @@ def register(request):
 # list all the task and categories for a particular user
 def task_list(request):
     category_id = request.GET.get('category')
+    search_query = request.GET.get('search', )
+    status_filter = request.GET.get('status')
+    priority_filter = request.GET.get('priority')
+    # tasks that belongs to the logged in user
+    tasks = Task.objects.filter(user=request.user)
+
+    # Apply category filter
     if category_id:
-        tasks = Task.objects.filter(user=request.user, category_id=category_id)
-    else:
-        tasks = Task.objects.filter(user=request.user)
+        tasks = tasks.filter(category_id=category_id)
+
+    # Apply search filter on title and description
+    if search_query:
+        tasks = tasks.filter(
+            Q(title__icontains=search_query) | Q(
+                description__icontains=search_query)
+        )
+
+    # Apply status filter if selected
+    if status_filter:
+        tasks = tasks.filter(status=status_filter)
+
+    # Apply priority filter if selected
+    if priority_filter:
+        tasks = tasks.filter(priority=priority_filter)
+
+    # Retrieve all categories for the filter dropdown
     categories = Category.objects.filter(user=request.user)
-    return render(request, 'task/task_list.html', {'tasks': tasks, 'categories': categories})
+    return render(request, 'task/task_list.html', {
+        'tasks': tasks,
+        'categories': categories,
+        'search_query': search_query,
+        'status_filter': status_filter,
+        'priority_filter': priority_filter
+    })
 
 
 @login_required
