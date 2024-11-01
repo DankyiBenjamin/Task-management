@@ -1,11 +1,15 @@
 from django import forms
 from .models import Task, Category
+from django.core.exceptions import ValidationError
+from datetime import date
 
 
 class TaskForm(forms.ModelForm):
     due_date = forms.DateField(
         input_formats=['%Y-%m-%d'],  # Specify your desired date format here
-        widget=forms.DateInput(attrs={'type': 'date'})  # HTML5 date picker
+        widget=forms.DateInput(
+            # HTML5 date picker
+            attrs={'type': 'date', 'class': 'form-control'})
     )
     category = forms.ModelChoiceField(
         queryset=Category.objects.none(),
@@ -16,6 +20,18 @@ class TaskForm(forms.ModelForm):
         model = Task
         fields = ['title', 'description', 'status',
                   'due_date', 'priority', 'category']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'status': forms.Select(attrs={'class': 'form-select'}),
+            'priority': forms.Select(attrs={'class': 'form-select'}),
+            'category': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+    def clean_due_date(self):
+        due_date = self.cleaned_data.get('due_date')
+        if due_date < date.today():
+            raise ValidationError("The due date cannot be in the past")
 
     def __init__(self, *args, **kwargs):
         # Get the user from view
@@ -30,3 +46,6 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+        }

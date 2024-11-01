@@ -1,17 +1,34 @@
 {%extends 'task/base.html'%} {% block title%} Category List {% endblock %}
 <!-- block content -->
 {% block content %}
-<h2>Categories</h2>
-<a href="{% url 'category_create' %}">Create New Category</a>
-<a href="{% url 'task_list' %}">Task List</a>
-<ul>
+<h2 class="mb-3">Categories</h2>
+
+<div class="mb-4">
+  <a href="{% url 'category_create' %}" class="btn btn-primary">
+    <i class="fas fa-plus"></i> Create New Category
+  </a>
+  <a href="{% url 'task_list' %}" class="btn btn-primary">
+    <i class="fas fa-folder"></i> Task List
+  </a>
+</div>
+<ul class="list-group">
   {% for category in categories %}
-  <li>
-    {{ category.name }}
-    <a href="{% url 'category_delete' category.pk %}">Delete</a>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    <span>{{ category.name }}</span>
+    <form
+      method="post"
+      action="{% url 'category_delete' category.pk %}"
+      style="display: inline"
+    >
+      {% csrf_token %}
+      <button type="submit" class="btn btn-sm btn-outline-danger">
+        <i class="fas fa-trash-alt"></i> Delete
+      </button>
+    </form>
   </li>
   {% empty %}
-  <p>No categories available.</p>
+  <li class="list-group-item">No categories available.</li>
   {% endfor %}
 </ul>
+
 {% endblock %}

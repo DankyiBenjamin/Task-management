@@ -1,11 +1,15 @@
 {%extends 'task/base.html'%}
 <!-- using the extended html -->
 {% block title%} Delete Category {% endblock %} {% block content %}
-<h2>Delete Category</h2>
-<p>Are you sure you want to delete the category "{{ category.name }}"?</p>
-<form method="post">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-primary">Yes, delete</button>
-  <a href="{% url 'category_list' %}">Cancel</a>
-</form>
+<div class="container mt-5">
+  <h2 class="mb-3">Delete Category</h2>
+  <p>Are you sure you want to delete the category "{{ category.name }}"?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary w-100 mt-3">
+      Yes, delete
+    </button>
+    <a href="{% url 'category_list' %}">Cancel</a>
+  </form>
+</div>
 {% endblock %}

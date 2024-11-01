@@ -1,10 +1,24 @@
 {%extends 'task/base.html'%}
 <!-- using the extended html -->
 {% block title%} Task Form{% endblock %} {% block content %}
-<h2>{% if form.instance.pk %}Edit Task{% else %}Create Task{% endif %}</h2>
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit" class="btn btn-primary">Save</button>
-  <a href="{% url 'task_list' %}">Cancel</a>
-</form>
+<div class="container mt-5">
+  <h2 class="mb-4">
+    {% if form.instance.pk %}Edit Task{% else %}Create Task{% endif %}
+  </h2>
+  <form method="post" class="card p-4">
+    {% csrf_token %} {{ form.as_p }}
+    <!-- still not working on the color from we will che -->
+    {% if form.due_date.errors %}
+    <div class="bs-danger-text-emphasis">
+      {% for error in form.due_date.errors %} {{ error }} {% endfor %}
+    </div>
+    {% endif %}
+    <button type="submit" class="btn btn-primary w-100 mt-3">
+      {% if form.instance.pk %}Update Task{% else %}Create Task{% endif %}
+    </button>
+    <a href="{% url 'task_list' %}" class="btn btn-secondary w-100 mt-2"
+      >Cancel</a
+    >
+  </form>
+</div>
 {% endblock %}

@@ -6,63 +6,99 @@
 
  {% block content %}
 <h2>Task List</h2>
+<div class="d-flex justify-content-between mb-4">
+  <!-- Link to create a new task -->
+   <div>
+    <a href="{% url 'task_create' %}" class="btn btn-primary">
+      <i class="fas fa-plus"></i> New Task</a>
+    <a href="{% url 'category_list' %}"class="btn btn-primary">
+      <i class="fas fa-folder"></i>Manage Categories</a>
+   </div>
 
-<!-- Link to create a new task -->
-<a href="{% url 'task_create' %}">Create New Task</a>
-<a href="{% url 'category_list' %}">Manage Categories</a>
+</div>
+
 
 <!-- Category filter form -->
  <!-- Search and filter form -->
-<form method="get" class="search-filter-form d-flex mb-3">
+  <!-- search-filter-form d-flex mb-3 -->
+<form method="get" class="row gx-2 align-items-center mb-4">
   <!-- Search bar -->
   <label for="search">Search:</label>
-  <input type="text" name="search" id="search" placeholder="Search tasks" class="form-control me-2" value="">
+  <input type="text" name="search" id="search" placeholder="Search tasks" class="form-control " value="">
   
   <!-- Category filter -->
+   <div class="col">
   <label for="category">Category:</label>
-  <select name="category" id="category" class="form-select me-2" onchange="this.form.submit()">
+  <select name="category" id="category" class="form-select " onchange="this.form.submit()">
     <option value="" {% if not request.GET.category %}selected{% endif %}>All</option>
     {% for category in categories %}
         <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
             {{ category.name }}
         </option>
+        
     {% endfor %}
-</select>
+  </select>
+</div>
 
   <!-- Status filter -->
+   <div class="col">
   <label for="status">Status:</label>
-  <select name="status" id="status" class="form-select me-2" onchange="this.form.submit()">
+  <select name="status" id="status" class="form-select " onchange="this.form.submit()">
       <option value="" {% if not request.GET.status %}selected{% endif %}>All</option>
       <option value="todo" {% if status_filter == 'todo' %}selected{% endif %}>To Do</option>
       <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
       <option value="done" {% if status_filter == 'done' %}selected{% endif %}>Done</option>
   </select>
+</div>
 
   <!-- Priority filter -->
+   <div class="col">
   <label for="priority">Priority:</label>
-  <select name="priority" id="priority" class="form-select me-2" onchange="this.form.submit()">
+  <select name="priority" id="priority" class="form-select" onchange="this.form.submit()">
       <option value="" {% if not request.GET.priority %}selected{% endif %}>All</option>
       <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>Low</option>
       <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>Medium</option>
       <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>High</option>
   </select>
+</div>
 
   <!-- Submit button for search bar -->
+   <div class="col-auto">
   <button type="submit" class="btn btn-primary">Filter</button>
+  </div>
 </form>
 
 <!-- Task list display -->
-<ul>
+<ul class="list-group">
   {% for task in tasks %}
-  <li>
-    <strong>{{ task.title }}</strong> - {{ task.get_status_display }} -
-    {{task.due_date }}
-    <a href="{% url 'task_update' task.pk %}">Edit</a>
-    <a href="{% url 'task_delete' task.pk %}">Delete</a>
-  </li>
-  {% empty %}
-  <p>No tasks available.</p>
-  {% endfor %}
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    <strong>{{ task.title }}</strong> <br>
+    {% if task.category %}
+    <span class="badge bg-secondary">{{ task.category.name }}</span>
+    {% else %}
+    <span class="badge bg-secondary">No Category</span>
+    {% endif %}
+
+    <span class="badge {% if task.status == 'todo' %}bg-warning{% elif task.status == 'in_progress' %}bg-primary{% elif task.status == 'done' %}bg-success{% endif %}">
+      {{ task.get_status_display }}
+    </span>
+    <span class="badge {% if task.priority == 'low' %}bg-info{% elif task.priority == 'medium' %}bg-warning{% elif task.priority == 'high' %}bg-danger{% endif %}">
+      {{ task.get_priority_display }}
+    </span>
+
+    <small class="text-muted">Due: {{ task.due_date }}</small>
+    <div>
+      <a href="{% url 'task_update' task.pk %}" class="btn btn-sm btn-outline-primary me-1">
+          <i class="fas fa-edit"></i> Edit
+      </a>
+      <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm btn-outline-danger">
+          <i class="fas fa-trash-alt"></i> Delete
+      </a>
+  </div>
+</li>
+{% empty %}
+<li class="list-group-item">No tasks available.</li>
+{% endfor %}
 </ul>
 
 {% endblock %}
