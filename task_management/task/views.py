@@ -36,6 +36,11 @@ def register(request):
 @login_required
 # list all the task and categories for a particular user
 def task_list(request):
+    # print(request.user.is_authenticated)
+    # if request.user.is_authenticated == False:
+    #     print("hello world")
+    #     return redirect('login')
+
     category_id = request.GET.get('category')
     search_query = request.GET.get('search', )
     status_filter = request.GET.get('status')
