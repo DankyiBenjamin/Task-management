@@ -30,6 +30,10 @@ class TaskForm(forms.ModelForm):
 
     def clean_due_date(self):
         due_date = self.cleaned_data.get('due_date')
+        status = self.cleaned_data.get('status')
+        # checking if the status is set to done
+        if status == "done":
+            return due_date
         if due_date < date.today():
             raise ValidationError("The due date cannot be in the past")
 
