@@ -75,6 +75,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'task_management.wsgi.application'
 
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://task-management-production-2644.up.railway.app',  # Your production domain
+]
+
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
