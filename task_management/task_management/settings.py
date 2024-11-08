@@ -88,7 +88,7 @@ WSGI_APPLICATION = 'task_management.wsgi.application'
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://task-management-production-2644.up.railway.app',  # Your production domain
+    'https://task-management-production-9813.up.railway.app',  # Your production domain
 ]
 
 # Database
