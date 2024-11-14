@@ -31,10 +31,53 @@ A simple task management application built with Django, where users can create, 
 
 ## Installation
 
+Create and Activate a Virtual Environment
+
+```
+python3 -m venv .venv
+```
+
+```
+source .venv/bin/activate # On Windows: .venv\Scripts\activate
+```
+
+### Install Dependencies
+
+```
+pip install -r requirements.txt
+```
+
+### Set Up the Database
+
+If you’re using SQLite (default):
+No setup is required; SQLite will automatically use db.sqlite3.
+If using PostgreSQL:
+Create a PostgreSQL database and user.
+Update DATABASE_URL in your environment variables (explained below).
+Apply Migrations
+
+```
+python manage.py migrate
+```
+
+Collect Static Files
+
+```
+python manage.py collectstatic --noinput
+```
+
+Run the Development Server
+
+```python manage.py runserver
+
+```
+
+Your application will be available at http://127.0.0.1:8000.
+
 ### Prerequisites
 
 - Python 3.8+
-- PostgreSQL (if using a PostgreSQL database locally)
+- Sqlite3
 - Git
 
 ### Steps
@@ -45,3 +88,22 @@ A simple task management application built with Django, where users can create, 
    git clone https://github.com/your-username/your-repo-name.git
    cd your-repo-name
    ```
+
+### Usage
+
+### Accessing the Application
+
+1. Homepage: Displays the list of tasks (for authenticated users).
+2. Register/Login: New users can register, and existing users can log in to manage their tasks.
+3. Task CRUD Operations:
+   - Create Task: Click "Create New Task" to add a new task.
+   - Edit Task: Click "Edit" on a task to update its details.
+   - Delete Task: Click "Delete" on a task to remove it.
+4. Task Filters and Search:
+   - Use the search bar and filters on the homepage to find tasks by title, description, status, priority, and category.
+
+### Built With
+
+1. [Django] - Web framework
+2. [Bootstrap] - Frontend framework for responsive design
+3. [Sqlite3] - Relational database (optional for production)
